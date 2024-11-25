@@ -1,6 +1,8 @@
-package main
+package cli
 
 import (
+	"blockchain_go/core/net"
+	"blockchain_go/utils"
 	"fmt"
 	"log"
 )
@@ -8,11 +10,11 @@ import (
 func (cli *CLI) startNode(nodeID, minerAddress string) {
 	fmt.Printf("Starting node %s\n", nodeID)
 	if len(minerAddress) > 0 {
-		if ValidateAddress(minerAddress) {
+		if utils.ValidateAddress(minerAddress) {
 			fmt.Println("Mining is on. Address to receive rewards: ", minerAddress)
 		} else {
 			log.Panic("Wrong miner address!")
 		}
 	}
-	StartServer(nodeID, minerAddress)
+	net.StartServer(nodeID, minerAddress)
 }

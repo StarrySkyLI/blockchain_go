@@ -1,10 +1,14 @@
-package main
+package cli
 
-import "fmt"
+import (
+	block2 "blockchain_go/core/block"
+	"blockchain_go/utils"
+	"fmt"
+)
 
 func (cli *CLI) reindexUTXO(nodeID string) {
-	bc := NewBlockchain(nodeID)
-	UTXOSet := UTXOSet{bc}
+	bc := block2.NewBlockchain(nodeID)
+	UTXOSet := utils.UTXOSet{bc}
 	UTXOSet.Reindex()
 
 	count := UTXOSet.CountTransactions()

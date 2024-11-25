@@ -1,6 +1,8 @@
-package main
+package block
 
 import (
+	"blockchain_go/core/transaction"
+	"blockchain_go/utils"
 	"bytes"
 	"encoding/gob"
 	"log"
@@ -10,7 +12,7 @@ import (
 // Block represents a block in the blockchain
 type Block struct {
 	Timestamp     int64
-	Transactions  []*Transaction
+	Transactions  []*transaction.Transaction
 	PrevBlockHash []byte
 	Hash          []byte
 	Nonce         int
@@ -18,9 +20,9 @@ type Block struct {
 }
 
 // NewBlock creates and returns Block
-func NewBlock(transactions []*Transaction, prevBlockHash []byte, height int) *Block {
+func NewBlock(transactions []*transaction.Transaction, prevBlockHash []byte, height int) *Block {
 	block := &Block{time.Now().Unix(), transactions, prevBlockHash, []byte{}, 0, height}
-	pow := NewProofOfWork(block)
+	pow := utils.NewProofOfWork(block)
 	nonce, hash := pow.Run()
 
 	block.Hash = hash[:]
@@ -30,8 +32,8 @@ func NewBlock(transactions []*Transaction, prevBlockHash []byte, height int) *Bl
 }
 
 // NewGenesisBlock creates and returns genesis Block
-func NewGenesisBlock(coinbase *Transaction) *Block {
-	return NewBlock([]*Transaction{coinbase}, []byte{}, 0)
+func NewGenesisBlock(coinbase *transaction.Transaction) *Block {
+	return NewBlock([]*transaction.Transaction{coinbase}, []byte{}, 0)
 }
 
 // HashTransactions returns a hash of the transactions in the block
@@ -41,7 +43,7 @@ func (b *Block) HashTransactions() []byte {
 	for _, tx := range b.Transactions {
 		transactions = append(transactions, tx.Serialize())
 	}
-	mTree := NewMerkleTree(transactions)
+	mTree := utils.NewMerkleTree(transactions)
 
 	return mTree.RootNode.Data
 }

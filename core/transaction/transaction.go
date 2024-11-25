@@ -1,6 +1,7 @@
-package main
+package transaction
 
 import (
+	"blockchain_go/utils"
 	"bytes"
 	"crypto/ecdsa"
 	"crypto/elliptic"
@@ -193,11 +194,11 @@ func NewCoinbaseTX(to, data string) *Transaction {
 }
 
 // NewUTXOTransaction creates a new transaction
-func NewUTXOTransaction(wallet *Wallet, to string, amount int, UTXOSet *UTXOSet) *Transaction {
+func NewUTXOTransaction(wallet *utils.Wallet, to string, amount int, UTXOSet *utils.UTXOSet) *Transaction {
 	var inputs []TXInput
 	var outputs []TXOutput
 
-	pubKeyHash := HashPubKey(wallet.PublicKey)
+	pubKeyHash := utils.HashPubKey(wallet.PublicKey)
 	acc, validOutputs := UTXOSet.FindSpendableOutputs(pubKeyHash, amount)
 
 	if acc < amount {

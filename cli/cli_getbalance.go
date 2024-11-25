@@ -1,20 +1,22 @@
-package main
+package cli
 
 import (
+	block2 "blockchain_go/core/block"
+	"blockchain_go/utils"
 	"fmt"
 	"log"
 )
 
 func (cli *CLI) getBalance(address, nodeID string) {
-	if !ValidateAddress(address) {
+	if !utils.ValidateAddress(address) {
 		log.Panic("ERROR: Address is not valid")
 	}
-	bc := NewBlockchain(nodeID)
-	UTXOSet := UTXOSet{bc}
+	bc := block2.NewBlockchain(nodeID)
+	UTXOSet := utils.UTXOSet{bc}
 	defer bc.db.Close()
 
 	balance := 0
-	pubKeyHash := Base58Decode([]byte(address))
+	pubKeyHash := utils.Base58Decode([]byte(address))
 	pubKeyHash = pubKeyHash[1 : len(pubKeyHash)-4]
 	UTXOs := UTXOSet.FindUTXO(pubKeyHash)
 
